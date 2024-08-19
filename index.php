@@ -6,6 +6,6 @@
     <title>Document</title>
 </head>
 <body>
-    <h1>AAAAA</h1>
+    <a href="login/login.php">ir al login</a>
 </body>
 </html>
