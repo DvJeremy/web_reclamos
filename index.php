@@ -6,6 +6,10 @@
     <title>Document</title>
 </head>
 <body>
-    <a href="login/login.php">ir al login</a>
+<?php include 'layouts/navbar.php'; ?>
+<h1>hola</h1>
+<h2>hola</h2>
+<h3>hola</h3>
+<?php include 'layouts/footer.php'; ?>
 </body>
 </html>
