@@ -61,10 +61,6 @@
                         <input type="datetime-local" class="form-control" id="fechaHora" required>
                     </div>
                     <div class="mb-3">
-                        <label for="direccion" class="form-label">Dirección Completa</label>
-                        <input type="text" class="form-control" id="direccion" required>
-                    </div>
-                    <div class="mb-3">
                         <label for="documento" class="form-label">Documento de identidad</label>
                         <input type="text" class="form-control" id="documento" required>
                     </div>

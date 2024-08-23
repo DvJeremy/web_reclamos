@@ -1,3 +1,47 @@
+<?php
+session_start(); // Iniciar sesión para manejar la sesión del usuario
+
+// Conectar a la base de datos
+$servername = "localhost";
+$username = "root"; // Cambiar según sea necesario
+$password = ""; // Cambiar según sea necesario
+$dbname = "reclamos";
+
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// Verificar la conexión
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Recoger los datos del formulario
+    $user = $_POST['username'];
+    $pass = $_POST['password'];
+
+    // Consultar la base de datos
+    $sql = "SELECT * FROM administrador WHERE Usename = ? AND contrasena = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("ss", $user, $pass);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows > 0) {
+        // Usuario autenticado
+        $_SESSION['user'] = $user; // Guardar usuario en la sesión
+        header("Location: ../administrador/principal.php"); // Redirigir al panel de administración
+        exit();
+    } else {
+        // Credenciales incorrectas
+        $error = "Usuario o contraseña incorrectos.";
+    }
+
+    $stmt->close();
+}
+
+$conn->close();
+?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -13,18 +57,23 @@
         <div class="card">
             <div class="card-body">
                 <h3 class="card-title text-center mb-4">Iniciar Sesión</h3>
-                <form>
+                <form method="POST" action="">
                     <div class="mb-3">
                         <label for="username" class="form-label">Usuario</label>
-                        <input type="text" class="form-control" id="username" placeholder="Ingrese el usuario">
+                        <input type="text" class="form-control" id="username" name="username" placeholder="Ingrese el usuario" required>
                     </div>
                     <div class="mb-3">
                         <label for="password" class="form-label">Contraseña</label>
-                        <input type="password" class="form-control" id="password" placeholder="Ingrese la contraseña">
+                        <input type="password" class="form-control" id="password" name="password" placeholder="Ingrese la contraseña" required>
                     </div>
                     <div class="d-grid">
                         <button type="submit" class="btn btn-primary btn-md btn-block" style="background-color: #d35400; border-color: #d35400;">Ingresar</button>
                     </div>
+                    <?php if (isset($error)): ?>
+                        <div class="mt-3 alert alert-danger" role="alert">
+                            <?php echo $error; ?>
+                        </div>
+                    <?php endif; ?>
                 </form>
                 <div class="text-center mt-3">
                     <p>¿No tienes cuenta? <a href="registro.php" class="text-decoration-none fw-bold" style="color: #d35400;">Regístrate aquí</a></p>
