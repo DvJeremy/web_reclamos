@@ -9,7 +9,7 @@
 <body>
 
     <div class="container card border shadow p-3 mb-5 bg-body-tertiary rounded mt-5">
-        <form action="eviarform.php" method="post">
+        <form action="/encuesta/eviarform.php" method="post">
             <div class="row">
               <h3 class="card-title text-center mb-4 text-orange">Formulario de Satisfacción</h3>
               <div class="col-md-6">
@@ -95,17 +95,8 @@
            
             </div>
 
-     
-
-
-
-
-
-
          </form>
     </div>
-
-      
-
+     
 </body>
 </html>
