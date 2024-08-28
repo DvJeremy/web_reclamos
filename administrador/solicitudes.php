@@ -10,6 +10,28 @@ $conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) {
     die("Conexión fallida: " . $conn->connect_error);
 }
+
+// Procesar el formulario de actualización de reclamo
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['codigo'])) {
+    $codigo = $_POST['codigo'];
+    $observacion = $_POST['observacion'];
+    $estado = $_POST['estado'];
+
+    //Crear consulta SQL para actualizar la observación y el estado
+     $sql = "UPDATE usuariosolicitante SET Observacion = ?, idEstado = ? WHERE Codigo = ?";
+
+    //Preparar y ejecutar la consulta
+     $stmt = $conn->prepare($sql);
+     $stmt->bind_param('sii', $observacion, $estado, $codigo);
+
+     if($stmt->execute()){
+        echo "<script>alert('Reclamo actualizado exitosamente');</script>";
+     }else{
+        echo "<script>alert('Error al actualizar el reclamo: ".$conn->error."');</script>";
+     }
+
+     $stmt->close();
+ }
 ?>
 
 <!DOCTYPE html>
@@ -88,7 +110,7 @@ if ($conn->connect_error) {
                 <h5 class="modal-title" id="editModalLabel">Editar Reclamo</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form id="editForm">
+            <form id="editForm" method="POST">
                 <div class="modal-body">
                     <input type="hidden" id="codigo" name="codigo">
                     <div class="mb-3">
