@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 23-08-2024 a las 04:26:29
+-- Tiempo de generación: 30-08-2024 a las 19:50:21
 -- Versión del servidor: 10.4.32-MariaDB
--- Versión de PHP: 8.0.30
+-- Versión de PHP: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -49,7 +49,7 @@ INSERT INTO `administrador` (`id`, `Usename`, `contrasena`, `estado`) VALUES
 
 CREATE TABLE `estado` (
   `idEstado` int(11) NOT NULL,
-  `nomEstado` tinyint(1) DEFAULT NULL
+  `nomEstado` varchar(20) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -57,8 +57,8 @@ CREATE TABLE `estado` (
 --
 
 INSERT INTO `estado` (`idEstado`, `nomEstado`) VALUES
-(1, 1),
-(2, 0);
+(1, 'Pendiente'),
+(2, 'Solucionado');
 
 -- --------------------------------------------------------
 
@@ -151,7 +151,9 @@ CREATE TABLE `solicitante` (
 --
 
 INSERT INTO `solicitante` (`dni`, `nombre`, `apellidos`, `correo`, `telefono`, `domicilio`, `codigoEstudiante`, `contrasena`) VALUES
+('123', 'piero', 'coveñas', 'prueba@outlok.com', '945132184', 'ya tu sae', '20181651', 'pass123'),
 ('12345678', 'Carlos', 'Lopez', 'carlos@example.com', '987654321', 'Av. Siempre Viva 123', 'U20210001', 'pass123'),
+('159753', 'piero', 'coveñas', 'prueba@outlok.com', '945132184', 'ya tu sae', '20181651', 'pass123'),
 ('45678901', 'Juan', 'Garcia', 'juan@example.com', '987654323', 'Av. Siempre Viva 125', 'U20210003', 'pass789'),
 ('87654321', 'Maria', 'Perez', 'maria@example.com', '987654322', 'Av. Siempre Viva 124', 'U20210002', 'pass456');
 
@@ -171,9 +173,8 @@ CREATE TABLE `solicitud` (
 --
 
 INSERT INTO `solicitud` (`idSolicitud`, `nombre`) VALUES
-(1, 'Cambio de horario de clase'),
-(2, 'Revisión de nota final'),
-(3, 'Reclamo por servicio académico');
+(1, 'Reclamo'),
+(2, 'Queja');
 
 -- --------------------------------------------------------
 
@@ -187,7 +188,9 @@ CREATE TABLE `usuariosolicitante` (
   `idSolicitud` int(11) DEFAULT NULL,
   `idFacultad` int(11) DEFAULT NULL,
   `idMotivo` int(11) DEFAULT NULL,
+  `bien` varchar(20) DEFAULT NULL,
   `descripcion` text DEFAULT NULL,
+  `monto` double(10,2) DEFAULT NULL,
   `fecha` date DEFAULT NULL,
   `hora` time DEFAULT NULL,
   `idEstado` int(11) DEFAULT NULL,
@@ -200,22 +203,24 @@ CREATE TABLE `usuariosolicitante` (
 -- Volcado de datos para la tabla `usuariosolicitante`
 --
 
-INSERT INTO `usuariosolicitante` (`idSolicitante`, `dni`, `idSolicitud`, `idFacultad`, `idMotivo`, `descripcion`, `fecha`, `hora`, `idEstado`, `Codigo`, `evidencia`, `Observacion`) VALUES
-(1, '12345678', 1, 1, 1, 'Solicito cambio de horario por superposición de materias.', '2022-03-15', '10:00:00', 1, 'A1001', NULL, ''),
-(2, '12345678', 2, 2, 2, 'La nota final no coincide con la nota publicada.', '2023-04-20', '11:00:00', 2, 'A1002', NULL, ''),
-(3, '87654321', 3, 1, 3, 'Reclamo por mal servicio en la administración.', '2021-05-10', '09:30:00', 1, 'A1003', NULL, ''),
-(4, '45678901', 1, 2, 1, 'Error en el registro de asignaturas.', '2024-01-25', '08:15:00', 2, 'A1004', NULL, ''),
-(5, '87654321', 3, 1, 2, 'Desacuerdo con la nota final.', '2024-02-14', '12:45:00', 1, 'A1005', NULL, ''),
-(6, '12345678', 2, 2, 1, 'Falta de información sobre el proceso.', '2020-08-07', '14:00:00', 2, 'A1006', NULL, ''),
-(7, '45678901', 1, 1, 3, 'Problema con la asignación de horarios.', '2019-07-12', '13:30:00', 1, 'A1007', NULL, ''),
-(8, '87654321', 2, 2, 2, 'Error en la inscripción de cursos.', '2020-09-03', '15:00:00', 2, 'A1008', NULL, ''),
-(9, '45678901', 3, 1, 1, 'Reclamo por demora en la atención.', '2021-10-05', '16:30:00', 1, 'A1009', NULL, ''),
-(10, '12345678', 1, 2, 3, 'Cambio de turno no procesado.', '2019-11-21', '17:45:00', 2, 'A1010', NULL, ''),
-(11, '87654321', 2, 1, 1, 'Reclamo por nota injusta.', '2023-06-18', '18:00:00', 1, 'A1011', NULL, ''),
-(12, '45678901', 3, 2, 2, 'Queja por falta de respuesta.', '2022-07-23', '19:15:00', 2, 'A1012', NULL, ''),
-(13, '12345678', 1, 1, 3, 'Problema con el registro de notas.', '2024-08-30', '20:30:00', 1, 'A1013', NULL, ''),
-(14, '87654321', 2, 2, 1, 'Error en la matrícula.', '2022-02-19', '21:45:00', 2, 'A1014', NULL, ''),
-(15, '45678901', 3, 1, 2, 'Reclamo por mal servicio en la secretaría.', '2023-03-27', '22:00:00', 1, 'A1015', NULL, '');
+INSERT INTO `usuariosolicitante` (`idSolicitante`, `dni`, `idSolicitud`, `idFacultad`, `idMotivo`, `bien`, `descripcion`, `monto`, `fecha`, `hora`, `idEstado`, `Codigo`, `evidencia`, `Observacion`) VALUES
+(1, '12345678', 1, 1, 1, NULL, 'Solicito cambio de horario por superposición de materias.', NULL, '2022-03-15', '10:00:00', 1, 'A1001', NULL, ''),
+(2, '12345678', 2, 2, 2, NULL, 'La nota final no coincide con la nota publicada.', NULL, '2023-04-20', '11:00:00', 2, 'A1002', NULL, ''),
+(3, '87654321', 1, 1, 3, NULL, 'Reclamo por mal servicio en la administración.', NULL, '2021-05-10', '09:30:00', 1, 'A1003', NULL, ''),
+(4, '45678901', 1, 2, 1, NULL, 'Error en el registro de asignaturas.', NULL, '2024-01-25', '08:15:00', 2, 'A1004', NULL, ''),
+(5, '87654321', 2, 1, 2, NULL, 'Desacuerdo con la nota final.', NULL, '2024-02-14', '12:45:00', 1, 'A1005', NULL, ''),
+(6, '12345678', 2, 2, 1, NULL, 'Falta de información sobre el proceso.', NULL, '2020-08-07', '14:00:00', 2, 'A1006', NULL, ''),
+(7, '45678901', 1, 1, 3, NULL, 'Problema con la asignación de horarios.', NULL, '2019-07-12', '13:30:00', 1, 'A1007', NULL, ''),
+(8, '87654321', 2, 2, 2, NULL, 'Error en la inscripción de cursos.', NULL, '2020-09-03', '15:00:00', 2, 'A1008', NULL, ''),
+(9, '45678901', 2, 1, 1, NULL, 'Reclamo por demora en la atención.', NULL, '2021-10-05', '16:30:00', 1, 'A1009', NULL, ''),
+(10, '12345678', 1, 2, 3, NULL, 'Cambio de turno no procesado.', NULL, '2019-11-21', '17:45:00', 2, 'A1010', NULL, ''),
+(11, '87654321', 2, 1, 1, NULL, 'Reclamo por nota injusta.', NULL, '2023-06-18', '18:00:00', 1, 'A1011', NULL, ''),
+(12, '45678901', 2, 2, 2, NULL, 'Queja por falta de respuesta.', NULL, '2022-07-23', '19:15:00', 2, 'A1012', NULL, ''),
+(13, '12345678', 1, 1, 3, NULL, 'Problema con el registro de notas.', NULL, '2024-08-30', '20:30:00', 1, 'A1013', NULL, ''),
+(14, '87654321', 2, 2, 1, NULL, 'Error en la matrícula.', NULL, '2022-02-19', '21:45:00', 2, 'A1014', NULL, ''),
+(15, '45678901', 1, 1, 2, NULL, 'Reclamo por mal servicio en la secretaría.', NULL, '2023-03-27', '22:00:00', 1, 'A1015', NULL, ''),
+(19, '12345678', 2, 1, 2, '', 'sadsad', 200.00, '2024-07-29', '00:02:00', 1, 'A110', '', 'dasdsad'),
+(20, '12345678', 2, 1, 2, 'Producto', 'sadsad', 200.00, '2024-07-29', '00:02:00', 1, 'A110', '', 'dasdsad');
 
 --
 -- Índices para tablas volcadas
@@ -318,7 +323,7 @@ ALTER TABLE `solicitud`
 -- AUTO_INCREMENT de la tabla `usuariosolicitante`
 --
 ALTER TABLE `usuariosolicitante`
-  MODIFY `idSolicitante` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `idSolicitante` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
 -- Restricciones para tablas volcadas
