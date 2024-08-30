@@ -58,7 +58,7 @@ if ($conn->connect_error) {
 
                 if ($result->num_rows > 0) {
                     while($row = $result->fetch_assoc()) {
-                        $estado = $row['estado'] ? 'Resuelto' : 'Pendiente';
+                        $estado = $row['estado'];
                         echo "<tr>
                                 <td>{$row['Codigo']}</td>
                                 <td>{$row['dni']}</td>

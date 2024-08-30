@@ -187,7 +187,7 @@ $distribucionCategorias = obtenerDistribucionCategorias($conn);
             <h3>Reclamos Críticos Detallados</h3>
             <?php foreach ($reclamosCriticosDetalles as $reclamo): ?>
                 <div>
-                    <h4>Reclamo <?php echo $reclamo['idSolicitante']; ?></h4>
+                    <h4>Reclamo <?php echo $reclamo['Codigo']; ?></h4>
                     <p><strong>Facultad:</strong> <?php echo $reclamo['facultadNombre']; ?></p>
                     <p><strong>Motivo:</strong> <?php echo $reclamo['motivoNombre']; ?></p>
                     <p><strong>Descripción:</strong> <?php echo $reclamo['descripcion']; ?></p>

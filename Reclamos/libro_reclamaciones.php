@@ -72,7 +72,7 @@
                         echo "<td>" . $row["descripcion"] . "</td>";
                         echo "<td>" . $row["fecha"] . "</td>";
                         echo "<td>" . $row["hora"] . "</td>";
-                        echo "<td>" . ($row["nomEstado"] ? 'Resuelto' : 'Pendiente') . "</td>";
+                        echo "<td>" . $row["nomEstado"]  . "</td>";
                         echo "<td>" . $row["facultad"] . "</td>";
                         echo "<td>" . $row["motivo"] . "</td>";
                         echo "</tr>";
