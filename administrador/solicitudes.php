@@ -17,21 +17,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['codigo'])) {
     $observacion = $_POST['observacion'];
     $estado = $_POST['estado'];
 
-    //Crear consulta SQL para actualizar la observación y el estado
-     $sql = "UPDATE usuariosolicitante SET Observacion = ?, idEstado = ? WHERE Codigo = ?";
+    // Crear consulta SQL para actualizar la observación y el estado
+    $sql = "UPDATE usuariosolicitante SET Observacion = ?, idEstado = ? WHERE Codigo = ?";
 
-    //Preparar y ejecutar la consulta
-     $stmt = $conn->prepare($sql);
-     $stmt->bind_param('sii', $observacion, $estado, $codigo);
+    // Preparar y ejecutar la consulta
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param('sii', $observacion, $estado, $codigo);
 
-     if($stmt->execute()){
-        echo "<script>alert('Reclamo actualizado exitosamente');</script>";
-     }else{
+    if ($stmt->execute()) {
+        echo "<script>alert('Reclamo actualizado exitosamente'); window.location.href='';</script>";
+    } else {
         echo "<script>alert('Error al actualizar el reclamo: ".$conn->error."');</script>";
-     }
+    }
 
-     $stmt->close();
- }
+    $stmt->close();
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -71,7 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['codigo'])) {
             </thead>
             <tbody>
                 <?php
-                $sql = "SELECT u.Codigo, u.dni, CONCAT(s.nombre, ' ', s.apellidos) AS nombre_solicitante, u.descripcion, m.nombre AS motivo, CONCAT(u.fecha, ' ', u.hora) AS fecha_hora, u.evidencia, e.nomEstado AS estado
+                $sql = "SELECT u.Codigo, u.dni, CONCAT(s.nombre, ' ', s.apellidos) AS nombre_solicitante, u.descripcion, m.nombre AS motivo, CONCAT(u.fecha, ' ', u.hora) AS fecha_hora, u.evidencia, e.nomEstado AS estado, u.Observacion, u.idEstado
                         FROM usuariosolicitante u
                         JOIN solicitante s ON u.dni = s.dni
                         JOIN motivo m ON u.idMotivo = m.idMotivo
@@ -80,7 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['codigo'])) {
 
                 if ($result->num_rows > 0) {
                     while($row = $result->fetch_assoc()) {
-                        $estado = $row['estado'] ? 'Resuelto' : 'Pendiente';
+                        $estado = isset($row['estado']) ? $row['estado'] : '';  // Solucionar el problema de undefined array key
                         echo "<tr>
                                 <td>{$row['Codigo']}</td>
                                 <td>{$row['dni']}</td>
@@ -90,7 +91,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['codigo'])) {
                                 <td>{$row['fecha_hora']}</td>
                                 <td><a href='data:application/octet-stream;base64,".base64_encode($row['evidencia'])."' download='{$row['Codigo']}_evidencia'>Descargar</a></td>
                                 <td>{$estado}</td>
-                                <td><button class='btn btn-primary' data-bs-toggle='modal' data-bs-target='#editModal' data-id='{$row['Codigo']}'>Editar</button></td>
+                                <td><button class='btn btn-primary' data-bs-toggle='modal' data-bs-target='#editModal' data-id='{$row['Codigo']}' data-observacion='{$row['Observacion']}' data-estado='{$row['idEstado']}'>Editar</button></td>
                               </tr>";
                     }
                 } else {
@@ -149,20 +150,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['codigo'])) {
         editModal.addEventListener('show.bs.modal', function (event) {
             var button = event.relatedTarget;
             var codigo = button.getAttribute('data-id');
+            var observacion = button.getAttribute('data-observacion');
+            var estado = button.getAttribute('data-estado');
 
             var modalBodyInput = editModal.querySelector('.modal-body #codigo');
             modalBodyInput.value = codigo;
 
-            var xhr = new XMLHttpRequest();
-            xhr.open('GET', 'get_reclamo.php?codigo=' + codigo, true);
-            xhr.onload = function () {
-                if (xhr.status === 200) {
-                    var reclamo = JSON.parse(xhr.responseText);
-                    editModal.querySelector('.modal-body #observacion').value = reclamo.observacion;
-                    editModal.querySelector('.modal-body #estado').value = reclamo.idEstado;
-                }
-            };
-            xhr.send();
+            var modalBodyObservacion = editModal.querySelector('.modal-body #observacion');
+            modalBodyObservacion.value = observacion;
+
+            var modalBodyEstado = editModal.querySelector('.modal-body #estado');
+            modalBodyEstado.value = estado;
         });
 
         var form = document.getElementById('editForm');
@@ -171,7 +169,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['codigo'])) {
             var formData = new FormData(form);
 
             var xhr = new XMLHttpRequest();
-            xhr.open('POST', 'update_reclamo.php', true);
+            xhr.open('POST', '', true);
             xhr.onload = function () {
                 if (xhr.status === 200) {
                     location.reload();
