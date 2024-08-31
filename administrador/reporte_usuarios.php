@@ -158,7 +158,7 @@ $sugerenciasMejora = obtenerSugerenciasMejora($conn);
         }
     </style>
 </head>
-
+<?php include '../layouts/navbaradmin.php'; ?>
 <body>
     <div class="container">
     </div>
@@ -355,5 +355,5 @@ $sugerenciasMejora = obtenerSugerenciasMejora($conn);
         }
     </script>
 </body>
-
+<?php include '../layouts/footer.php'; ?>
 </html>

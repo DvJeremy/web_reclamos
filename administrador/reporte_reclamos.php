@@ -154,6 +154,7 @@ $distribucionCategorias = obtenerDistribucionCategorias($conn);
         }
     </style>
 </head>
+<?php include '../layouts/navbaradmin.php'; ?>
 <body>
     <div class="container">
         <div class="charts">
@@ -250,4 +251,5 @@ $distribucionCategorias = obtenerDistribucionCategorias($conn);
         });
     </script>
 </body>
+<?php include '../layouts/footer.php'; ?>
 </html>

@@ -29,7 +29,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($result->num_rows > 0) {
         // Usuario autenticado
         $_SESSION['user'] = $user; // Guardar usuario en la sesión
-        header("Location: ../administrador/principal.php"); // Redirigir al panel de administración
+        header("Location: ../administrador/solicitudes.php"); // Redirigir al panel de administración
         exit();
     } else {
         // Credenciales incorrectas

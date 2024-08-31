@@ -17,13 +17,13 @@
     <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ml-auto">
             <li class="nav-item active">
-                <a class="nav-link mr-5" href="#" data-target="../administrador/solicitudes.php">Solicitudes</a>
+                <a class="nav-link mr-5" href="../administrador/solicitudes.php" >Solicitudes</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link mr-5" href="#" data-target="../administrador/reporte_reclamos.php">Reporte de reclamos</a>
+                <a class="nav-link mr-5" href="../administrador/reporte_reclamos.php" >Reporte de reclamos</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link mr-5" href="#" data-target="../administrador/reporte_usuarios.php">Reporte de usuarios</a>
+                <a class="nav-link mr-5" href="../administrador/reporte_usuarios.php" >Reporte de usuarios</a>
             </li>
         </ul>
     </div>

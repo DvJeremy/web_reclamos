@@ -28,6 +28,7 @@ if ($conn->connect_error) {
         }
     </style>
 </head>
+<?php include '../layouts/navbaradmin.php'; ?>
 <body>
 
 <div class="container my-5">
@@ -160,4 +161,5 @@ if ($conn->connect_error) {
     });
 </script>
 </body>
+<?php include '../layouts/footer.php'; ?>
 </html>
