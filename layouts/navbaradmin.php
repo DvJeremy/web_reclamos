@@ -20,10 +20,10 @@
                 <a class="nav-link mr-5" href="#" data-target="../administrador/solicitudes.php">Solicitudes</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link mr-5" href="#" data-target="../administrador/dashboard.php">Reporte de reclamos</a>
+                <a class="nav-link mr-5" href="#" data-target="../administrador/reporte_reclamos.php">Reporte de reclamos</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link mr-5" href="#" data-target="">Reporte de usuarios</a>
+                <a class="nav-link mr-5" href="#" data-target="../administrador/reporte_usuarios.php">Reporte de usuarios</a>
             </li>
         </ul>
     </div>
