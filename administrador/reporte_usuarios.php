@@ -1,5 +1,4 @@
 <?php
-// Conectar a la base de datos
 $servername = "localhost";
 $username = "root";
 $password = "";
@@ -12,42 +11,36 @@ try {
     die("Error de conexión: " . $e->getMessage());
 }
 
-// Función para obtener calificaciones
 function obtenerCalificaciones($conn)
 {
     $stmt = $conn->query("SELECT calificacion, COUNT(*) as cantidad FROM formulario GROUP BY calificacion");
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
-// Función para obtener tiempo de respuesta
 function obtenerTiempoRespuesta($conn)
 {
     $stmt = $conn->query("SELECT MIN(tiempoRespuesta) as minTiempo, MAX(tiempoRespuesta) as maxTiempo, AVG(tiempoRespuesta) as mediaTiempo FROM formulario");
     return $stmt->fetch(PDO::FETCH_ASSOC);
 }
 
-// Función para obtener distribución de dificultad
 function obtenerDificultad($conn)
 {
     $stmt = $conn->query("SELECT dificultad, COUNT(*) as cantidad FROM formulario GROUP BY dificultad");
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
-// Función para obtener distribución de resuelto
 function obtenerResuelto($conn)
 {
     $stmt = $conn->query("SELECT resuelto, COUNT(*) as cantidad FROM formulario GROUP BY resuelto");
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
-// Función para obtener distribución de informado
 function obtenerInformado($conn)
 {
     $stmt = $conn->query("SELECT informado, COUNT(*) as cantidad FROM formulario GROUP BY informado");
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
-// Función para obtener palabras clave de sugerencias de mejora
 function obtenerSugerenciasMejora($conn)
 {
     $stmt = $conn->query("SELECT sugerenciasMejora FROM formulario");
@@ -56,7 +49,7 @@ function obtenerSugerenciasMejora($conn)
     foreach ($sugerencias as $sugerencia) {
         $words = explode(' ', strtolower($sugerencia['sugerenciasMejora']));
         foreach ($words as $word) {
-            if (strlen($word) > 2) { // Ignorar palabras muy cortas
+            if (strlen($word) > 2) {
                 if (isset($palabras[$word])) {
                     $palabras[$word]++;
                 } else {
@@ -65,11 +58,10 @@ function obtenerSugerenciasMejora($conn)
             }
         }
     }
-    arsort($palabras); // Ordenar por frecuencia
+    arsort($palabras);
     return $palabras;
 }
 
-// Obtener datos
 $calificaciones = obtenerCalificaciones($conn);
 $tiempoRespuesta = obtenerTiempoRespuesta($conn);
 $dificultad = obtenerDificultad($conn);
@@ -125,32 +117,23 @@ $sugerenciasMejora = obtenerSugerenciasMejora($conn);
         .charts {
             display: flex;
             flex-wrap: wrap;
-            /* Permite que los elementos se ajusten a la línea siguiente si no caben en una línea */
             gap: 20px;
-            /* Espacio entre los elementos */
             justify-content: space-between;
-            /* Distribuye el espacio entre los elementos */
         }
-
 
         .charts-container {
             display: flex;
             justify-content: space-around;
-            /* Ajusta la separación entre los gráficos */
             flex-wrap: wrap;
-            /* Permite que los gráficos se ajusten a nuevas líneas si el espacio es insuficiente */
         }
 
         .chart-container {
             flex: 1;
-            /* Los elementos ocupan igual espacio disponible */
             margin: 10px;
-            /* Espacio alrededor de cada gráfico */
         }
 
         .nube-palabras {
             text-align: center;
-            /* Esto asegura que el texto dentro de los span se centre */
             margin-top: 20px;
             padding: 20px;
             background: #fff;
@@ -162,9 +145,7 @@ $sugerenciasMejora = obtenerSugerenciasMejora($conn);
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            /* Centra los span horizontalmente */
             gap: 5px;
-            /* Ajusta el espacio entre palabras */
         }
 
         .nube-palabras span {
@@ -173,9 +154,7 @@ $sugerenciasMejora = obtenerSugerenciasMejora($conn);
             display: inline-block;
             line-height: 1.2;
             color: #333;
-            /* Color del texto */
             margin: 5px;
-            /* Espacio entre palabras */
         }
     </style>
 </head>
@@ -183,13 +162,10 @@ $sugerenciasMejora = obtenerSugerenciasMejora($conn);
 <body>
     <div class="container">
     </div>
-    <!-- Contenedor Flex -->
     <div class="charts-container">
-        <!-- Calificaciones -->
         <div class="chart-container">
             <canvas id="calificaciones"></canvas>
         </div>
-        <!-- Dificultad -->
         <div class="chart-container">
             <canvas id="dificultad"></canvas>
         </div>
@@ -198,27 +174,22 @@ $sugerenciasMejora = obtenerSugerenciasMejora($conn);
         <h2>Palabras más repetidas en las sugerencias de mejora</h2>
         <div id="nubePalabras" class="nube-palabras"></div>
     </div>
-    <!-- Tiempo de Respuesta -->
     <div class="card">
         <h2>Tiempo de Respuesta</h2>
         <p>Mínimo: <?php echo $tiempoRespuesta['minTiempo']; ?> días</p>
         <p>Máximo: <?php echo $tiempoRespuesta['maxTiempo']; ?> días</p>
         <p>Media: <?php echo round($tiempoRespuesta['mediaTiempo'], 2); ?> días</p>
     </div>
-
     <div class="charts-container">
-        <!-- Resuelto -->
         <div class="chart-container">
             <canvas id="resuelto"></canvas>
         </div>
-        <!-- Informado -->
         <div class="chart-container">
             <canvas id="informado"></canvas>
         </div>
     </div>
 
     <script>
-        // Gráfico de Calificaciones
         const ctx1 = document.getElementById('calificaciones').getContext('2d');
         new Chart(ctx1, {
             type: 'bar',
@@ -240,10 +211,10 @@ $sugerenciasMejora = obtenerSugerenciasMejora($conn);
                 }
             }
         });
-        // Gráfico de Dificultad
+
         const ctx2 = document.getElementById('dificultad').getContext('2d');
         new Chart(ctx2, {
-            type: 'pie', // Cambiado a 'pie' para un gráfico circular
+            type: 'pie',
             data: {
                 labels: <?php echo json_encode(array_column($dificultad, 'dificultad')); ?>,
                 datasets: [{
@@ -255,7 +226,6 @@ $sugerenciasMejora = obtenerSugerenciasMejora($conn);
                         'rgba(255, 159, 64, 0.2)',
                         'rgba(255, 99, 132, 0.2)',
                         'rgba(54, 162, 235, 0.2)',
-                        // Añade más colores si tienes más categorías
                     ],
                     borderColor: [
                         'rgba(75, 192, 192, 1)',
@@ -263,7 +233,6 @@ $sugerenciasMejora = obtenerSugerenciasMejora($conn);
                         'rgba(255, 159, 64, 1)',
                         'rgba(255, 99, 132, 1)',
                         'rgba(54, 162, 235, 1)',
-                        // Añade más colores si tienes más categorías
                     ],
                     borderWidth: 1
                 }]
@@ -274,7 +243,7 @@ $sugerenciasMejora = obtenerSugerenciasMejora($conn);
                 plugins: {
                     title: {
                         display: true,
-                        text: 'N° usuarios que tuvieron alguna dificultad para presentar su reclamo' // Aquí agregas tu título
+                        text: 'N° usuarios que tuvieron alguna dificultad para presentar su reclamo'
                     },
                     legend: {
                         position: 'top',
@@ -290,12 +259,9 @@ $sugerenciasMejora = obtenerSugerenciasMejora($conn);
             }
         });
 
-
-
-        // Gráfico de Resuelto
         const ctx3 = document.getElementById('resuelto').getContext('2d');
         new Chart(ctx3, {
-            type: 'pie', // Cambiado a 'pie' para un gráfico circular
+            type: 'pie',
             data: {
                 labels: <?php echo json_encode(array_column($resuelto, 'resuelto')); ?>,
                 datasets: [{
@@ -305,17 +271,11 @@ $sugerenciasMejora = obtenerSugerenciasMejora($conn);
                         'rgba(153, 102, 255, 0.2)',
                         'rgba(255, 159, 64, 0.2)',
                         'rgba(75, 192, 192, 0.2)',
-                        'rgba(255, 99, 132, 0.2)',
-                        'rgba(54, 162, 235, 0.2)',
-                        // Añade más colores si tienes más categorías
                     ],
                     borderColor: [
                         'rgba(153, 102, 255, 1)',
                         'rgba(255, 159, 64, 1)',
                         'rgba(75, 192, 192, 1)',
-                        'rgba(255, 99, 132, 1)',
-                        'rgba(54, 162, 235, 1)',
-                        // Añade más colores si tienes más categorías
                     ],
                     borderWidth: 1
                 }]
@@ -326,7 +286,7 @@ $sugerenciasMejora = obtenerSugerenciasMejora($conn);
                 plugins: {
                     title: {
                         display: true,
-                        text: 'N° de usuarios con problemática resuelta' // Aquí agregas tu título
+                        text: 'N° usuarios que tuvieron su reclamo resuelto'
                     },
                     legend: {
                         position: 'top',
@@ -342,31 +302,23 @@ $sugerenciasMejora = obtenerSugerenciasMejora($conn);
             }
         });
 
-
-        // Gráfico de Informado
         const ctx4 = document.getElementById('informado').getContext('2d');
         new Chart(ctx4, {
-            type: 'pie', // Cambiado a 'pie' para un gráfico circular
+            type: 'pie',
             data: {
                 labels: <?php echo json_encode(array_column($informado, 'informado')); ?>,
                 datasets: [{
                     label: '',
                     data: <?php echo json_encode(array_column($informado, 'cantidad')); ?>,
                     backgroundColor: [
+                        'rgba(153, 102, 255, 0.2)',
                         'rgba(255, 159, 64, 0.2)',
                         'rgba(75, 192, 192, 0.2)',
-                        'rgba(153, 102, 255, 0.2)',
-                        'rgba(255, 99, 132, 0.2)',
-                        'rgba(54, 162, 235, 0.2)',
-                        // Añade más colores si tienes más categorías
                     ],
                     borderColor: [
+                        'rgba(153, 102, 255, 1)',
                         'rgba(255, 159, 64, 1)',
                         'rgba(75, 192, 192, 1)',
-                        'rgba(153, 102, 255, 1)',
-                        'rgba(255, 99, 132, 1)',
-                        'rgba(54, 162, 235, 1)',
-                        // Añade más colores si tienes más categorías
                     ],
                     borderWidth: 1
                 }]
@@ -377,7 +329,7 @@ $sugerenciasMejora = obtenerSugerenciasMejora($conn);
                 plugins: {
                     title: {
                         display: true,
-                        text: 'N° de usuarios informados durante la resolución de su reclamo' // Aquí agregas tu título
+                        text: 'N° usuarios que fueron informados sobre el estado de su reclamo'
                     },
                     legend: {
                         position: 'top',
@@ -392,15 +344,15 @@ $sugerenciasMejora = obtenerSugerenciasMejora($conn);
                 }
             }
         });
-        // Nube de Palabras
+
         const nubePalabras = document.getElementById('nubePalabras');
-        <?php
-        $maxCount = max($sugerenciasMejora);
-        foreach ($sugerenciasMejora as $palabra => $count) {
-            $fontSize = 10 + ($count / $maxCount * 40); // Ajusta el tamaño de la fuente según la frecuencia
-            echo "nubePalabras.innerHTML += '<span style=\"font-size: {$fontSize}px;\">{$palabra}</span> ';";
+        const palabras = <?php echo json_encode($sugerenciasMejora); ?>;
+        for (const [word, count] of Object.entries(palabras)) {
+            const span = document.createElement('span');
+            span.style.fontSize = `${Math.min(count * 15, 36)}px`;
+            span.textContent = word;
+            nubePalabras.appendChild(span);
         }
-        ?>
     </script>
 </body>
 
