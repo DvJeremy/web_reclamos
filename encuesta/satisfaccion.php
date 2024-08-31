@@ -46,10 +46,20 @@
                      </label>
                   </div>
 
-                  <div class="form-floating mb-3">
-                     <input class="form-control"  type="text" name="dificultad" id="campo_nombre" placeholder="Escribe tu nombre">
-                     <label class="form-label"  for="campo_nombre">2. ¿Tuvo alguna dificultad al presentar su reclamo?</label>          
-                   </div>
+                  </div>
+                  <label class="form-label"  for="">2. ¿Tuvo alguna dificultad al presentar su reclamo?</label>
+                  <div class="form-check">
+                     <input class="form-check-input" type="radio" name="dificultad" value="Si" id="flexRadioDefault2" >
+                     <label class="form-check-label" for="flexRadioDefault2">
+                      Si
+                     </label>
+                  </div>
+                  <div class="form-check mb-3">
+                     <input class="form-check-input" type="radio" name="dificultad" value="No" id="flexRadioDefault2" >
+                     <label class="form-check-label" for="flexRadioDefault2">
+                        No
+                     </label>
+                  </div>
             
                   <label class="form-label"  for="">3. ¿Su problema fue resuelto efectivamente?</label>
                   <div class="form-check">
@@ -65,8 +75,8 @@
                      </label>
                   </div>
                   <div class="form-floating mb-3">
-                     <input class="form-control"  type="text" name="tiempo" id="campo_nombre" placeholder="Escribe tu nombre">
-                     <label class="form-label"  for="campo_nombre">4. Tiempo en días que tardó en resolverse el reclamo</label>          
+                     <input class="form-control" type="number" name="tiempo" id="campo_nombre" placeholder="Escribe el tiempo en días" min="0" step="1">
+                     <label class="form-label" for="campo_nombre">4. Tiempo en días que tardó en resolverse el reclamo</label>
                   </div>
              </div>
 
