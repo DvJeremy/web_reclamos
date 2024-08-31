@@ -75,9 +75,6 @@ $conn->close();
                         </div>
                     <?php endif; ?>
                 </form>
-                <div class="text-center mt-3">
-                    <p>¿No tienes cuenta? <a href="registro.php" class="text-decoration-none fw-bold" style="color: #d35400;">Regístrate aquí</a></p>
-                </div>
             </div>
         </div>
     </div>
